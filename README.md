@@ -52,6 +52,7 @@ Given a legal document, the model returns:
 ## Architecture
 
 ```mermaid
+%%{init: {'theme': 'neutral'}}%%
 graph TD
     subgraph machine["User's Machine — fully offline"]
         UI["Streamlit Frontend\n:8501"]
