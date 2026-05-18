@@ -6,6 +6,22 @@ PrivateDoc AI is a full-stack AI application that extracts structured informatio
 
 ---
 
+## Screenshots
+
+### 1. Upload interface — clean, minimal, status visible at a glance
+
+![Upload interface](assets/screenshot_upload.png)
+
+### 2. Analysis results — summary and key details extracted from the document
+
+![Analysis results](assets/screenshot_results.png)
+
+### 3. Detailed extraction — obligations and risky clauses flagged with explanations
+
+![Obligations and risky clauses](assets/screenshot_analysis.png)
+
+---
+
 ## Why Offline?
 
 Legal documents contain sensitive information you should never send to a third-party API. PrivateDoc AI runs the entire AI pipeline locally:
