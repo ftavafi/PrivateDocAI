@@ -143,7 +143,7 @@ This downloads ~8.1 GB. Only needed once.
 ### 2. Clone and install
 
 ```bash
-git clone https://github.com/armineslami/PrivateDocAI.git
+git clone https://github.com/ftavafi/PrivateDocAI.git
 cd PrivateDocAI
 python -m venv .venv
 source .venv/bin/activate      # Windows: .venv\Scripts\activate
