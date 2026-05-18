@@ -51,26 +51,21 @@ Given a legal document, the model returns:
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────┐
-│                   User's Machine                    │
-│                                                     │
-│  ┌──────────────┐   HTTP    ┌──────────────────┐   │
-│  │  Streamlit   │ ────────► │  FastAPI         │   │
-│  │  :8501       │ ◄──────── │  :8000           │   │
-│  └──────────────┘   JSON    └────────┬─────────┘   │
-│                                      │ OpenAI API  │
-│                                      ▼  (local)    │
-│                             ┌──────────────────┐   │
-│                             │  Ollama           │   │
-│                             │  :11434           │   │
-│                             └────────┬─────────┘   │
-│                                      │             │
-│                             ┌────────▼─────────┐   │
-│                             │  gemma3:12b       │   │
-│                             │  (on disk, GGUF)  │   │
-│                             └──────────────────┘   │
-└─────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph machine["User's Machine — fully offline"]
+        UI["Streamlit Frontend\n:8501"]
+        API["FastAPI Backend\n:8000"]
+        OLLAMA["Ollama Server\n:11434"]
+        MODEL["gemma3:12b\nGGUF on disk"]
+
+        UI -->|"HTTP POST /analyze\nmultipart/form-data"| API
+        API -->|"JSON response"| UI
+        API -->|"OpenAI-compatible API\nHTTP POST /v1/chat/completions"| OLLAMA
+        OLLAMA -->|"loads weights"| MODEL
+    end
+
+    PDF["PDF Upload"] --> UI
 ```
 
 **Key design decisions:**
