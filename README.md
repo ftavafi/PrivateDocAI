@@ -52,21 +52,27 @@ Given a legal document, the model returns:
 ## Architecture
 
 ```mermaid
-%%{init: {'theme': 'neutral'}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#EFF6FF', 'primaryBorderColor': '#BFDBFE', 'lineColor': '#6B7280'}}}%%
 graph TD
-    subgraph machine["User's Machine — fully offline"]
-        UI["Streamlit Frontend\n:8501"]
-        API["FastAPI Backend\n:8000"]
-        OLLAMA["Ollama Server\n:11434"]
-        MODEL["gemma3:12b\nGGUF on disk"]
+    classDef frontend fill:#FF4B4B,stroke:#DC2626,color:#FFFFFF
+    classDef backend fill:#059669,stroke:#047857,color:#FFFFFF
+    classDef server fill:#7C3AED,stroke:#6D28D9,color:#FFFFFF
+    classDef model fill:#2563EB,stroke:#1D4ED8,color:#FFFFFF
+    classDef input fill:#64748B,stroke:#475569,color:#FFFFFF
 
-        UI -->|"HTTP POST /analyze\nmultipart/form-data"| API
+    subgraph machine["🔒  User's Machine — fully offline"]
+        UI["Streamlit Frontend\n:8501"]:::frontend
+        API["FastAPI Backend\n:8000"]:::backend
+        OLLAMA["Ollama Server\n:11434"]:::server
+        MODEL["gemma3:12b\nGGUF on disk"]:::model
+
+        UI -->|"HTTP POST /analyze"| API
         API -->|"JSON response"| UI
-        API -->|"OpenAI-compatible API\nHTTP POST /v1/chat/completions"| OLLAMA
+        API -->|"OpenAI-compatible API"| OLLAMA
         OLLAMA -->|"loads weights"| MODEL
     end
 
-    PDF["PDF Upload"] --> UI
+    PDF["📄 PDF Upload"]:::input --> UI
 ```
 
 **Key design decisions:**
