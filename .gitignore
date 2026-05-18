@@ -1,0 +1,26 @@
+# Claude Code local settings
+.claude/
+
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# macOS
+.DS_Store
+
+# Environment files
+.env
+.env.*
+
+# Editor
+.vscode/settings.json
+.idea/
+
+# Streamlit
+.streamlit/secrets.toml
