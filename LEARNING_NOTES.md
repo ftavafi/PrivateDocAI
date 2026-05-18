@@ -1197,4 +1197,148 @@ indicators should be linked, not built separately. One source of truth, two cons
 
 ## Phase 8 — Portfolio Polish
 
-Notes will be added when Phase 8 begins.
+### What This Phase Is About
+
+Phase 8 is not about adding features — it is about making the work you already did
+legible to people who were not there when you built it. A great project with a poor
+README is invisible. A great README turns a working prototype into a portfolio asset.
+
+The three things that matter most to a recruiter or hiring manager landing on your repo:
+
+1. **What does it do?** — answered by the title, one-line description, and screenshots
+2. **How do I run it?** — answered by the Setup section
+3. **Does the author know what they are doing?** — answered by the architecture diagram,
+   the tech stack table, and the design decisions section
+
+If those three questions are answered in the first scroll, the repo does its job.
+
+---
+
+### Git and Version Control Fundamentals
+
+This phase introduced `git` as a version control tool for the first time in the project.
+Key concepts used:
+
+**`git init`** — Initializes an empty Git repository in the current directory. Creates
+a hidden `.git/` folder that tracks all history. You only run this once per project.
+
+**`.gitignore`** — A file that tells Git which files to never track. Critical entries
+for a Python project:
+
+```text
+.venv/          ← virtual environment (hundreds of MB, fully reproducible from requirements.txt)
+__pycache__/    ← compiled Python bytecode (auto-generated, never hand-edited)
+.DS_Store       ← macOS filesystem metadata (irrelevant to the project)
+.env            ← secrets and credentials (NEVER commit these)
+.claude/        ← local Claude Code settings (machine-specific, not project code)
+```
+
+The rule: commit source code and configuration. Never commit generated files, large
+binaries, or secrets.
+
+**`git add`** — Stages files for the next commit. You explicitly choose what goes in,
+which is why `.gitignore` matters — it prevents accidental staging of files you never
+want tracked.
+
+**`git commit`** — Saves a snapshot of all staged files with a message. The message
+should explain *why* the change was made, not *what* changed (the diff shows that).
+
+**`git push`** — Sends local commits to a remote repository (GitHub in this case).
+
+---
+
+### SSH vs HTTPS Authentication
+
+When pushing to GitHub, there are two ways to authenticate:
+
+**HTTPS** — Uses your GitHub username and a Personal Access Token (PAT). The URL looks
+like `https://github.com/user/repo.git`. Requires a token because GitHub removed
+password authentication in 2021.
+
+**SSH** — Uses a key pair: a private key on your machine (`~/.ssh/id_ed25519`) and a
+public key registered with GitHub. The URL looks like `git@github.com:user/repo.git`.
+No password needed after setup — the handshake is cryptographic.
+
+This project used SSH because the machine already had an `id_ed25519` key pair. SSH is
+generally preferred for developer machines because it is more convenient (no token
+management) and more secure (private key never leaves your machine).
+
+---
+
+### README as a Technical Document
+
+A good README for an AI project should cover:
+
+| Section | Purpose |
+| --- | --- |
+| Title + one-liner | Immediate orientation |
+| Screenshots | Show don't tell — the fastest way to convey what the app does |
+| Why offline / motivation | The design constraint that shapes all decisions |
+| What it extracts | Concrete output — makes the value proposition tangible |
+| Tech stack | Signals technical choices and lets readers assess fit |
+| Architecture diagram | Shows systems thinking, not just coding ability |
+| Setup instructions | Proves the project actually runs |
+| Configuration | Shows awareness of deployment concerns (12-Factor) |
+| Limitations | Shows honesty and engineering maturity |
+
+The limitations section is particularly important in a portfolio context. Listing known
+limitations signals that you understand the system deeply, not just that you got it
+working. Hiding limitations suggests the opposite.
+
+---
+
+### Mermaid Diagrams in GitHub
+
+GitHub renders Mermaid diagrams natively in Markdown files — no plugin or external
+tool needed. A fenced code block with the `mermaid` language tag becomes an interactive
+diagram when viewed on GitHub. The opening fence is written as ` ```mermaid `
+followed by the diagram definition, then a closing ` ``` `.
+
+Key Mermaid concepts used in this project:
+
+**`classDef`** — Defines a reusable style (fill color, stroke, text color):
+
+```text
+classDef backend fill:#059669,stroke:#047857,color:#FFFFFF
+```
+
+**`:::className`** — Applies a class to a specific node:
+
+```text
+API["FastAPI Backend\n:8000"]:::backend
+```
+
+**`%%{init: {...}}%%`** — Sets the theme and theme variables for the whole diagram.
+The `base` theme is used when you want full color control via `classDef`.
+
+**`subgraph`** — Groups nodes inside a labeled box. Used here to show all components
+running on the same machine, reinforcing the offline architecture.
+
+---
+
+### Project Completion Summary
+
+PrivateDoc AI is fully shipped. Here is what was built across all 8 phases:
+
+| Phase | What was built |
+| --- | --- |
+| 1 | Local model running via Ollama (gemma3:12b) |
+| 2 | FastAPI backend with health check and text endpoint |
+| 3 | PDF parsing with pdfplumber and text cleaning |
+| 4 | Streaming token output endpoint |
+| 5 | Structured JSON extraction with prompt engineering and retry |
+| 6 | Context window chunking and multi-chunk merge |
+| 7 | Streamlit frontend — full UI end to end |
+| 8 | README, screenshots, git history, live on GitHub |
+
+---
+
+### Phase 8 Milestone Checklist
+
+- [x] `.gitignore` created — excludes `.venv`, `__pycache__`, `.DS_Store`, `.claude/`
+- [x] `README.md` written — privacy pitch, screenshots, architecture, setup guide
+- [x] Mermaid diagram with branded colors per component
+- [x] `git init` and initial commit — 20 files, clean history
+- [x] SSH remote configured and pushed to GitHub
+- [x] `assets/` folder with 3 screenshots added to README
+- [x] Repo live at `github.com/ftavafi/PrivateDocAI`
