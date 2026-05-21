@@ -127,48 +127,129 @@ PrivateDocAI/
 
 ## Setup
 
+Do this once after cloning the repo.
+
 ### Prerequisites
 
 - Python 3.11+
-- [Ollama](https://ollama.com/download) installed and running
+- [Ollama](https://ollama.com/download) installed
 
-### 1. Pull the model
-
-```bash
-ollama pull gemma3:12b
-```
-
-This downloads ~8.1 GB. Only needed once.
-
-### 2. Clone and install
+### 1. Clone the repo
 
 ```bash
 git clone https://github.com/ftavafi/PrivateDocAI.git
 cd PrivateDocAI
+```
+
+### 2. Create a virtual environment and install dependencies
+
+```bash
 python -m venv .venv
 source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 3. Start the backend
+### 3. Pull the model
 
 ```bash
+ollama pull gemma3:12b
+```
+
+Downloads ~8.1 GB. Only needed once. Verify it worked:
+
+```bash
+ollama list
+```
+
+You should see `gemma3:12b` in the output.
+
+---
+
+## Running the App
+
+Do this every time you want to use the app. You need **two terminals**.
+
+### Terminal 1 — Start Ollama
+
+```bash
+ollama serve
+```
+
+> Skip this if Ollama is already running as a background service (check with `ollama list`).
+
+### Terminal 2 — Start the FastAPI backend
+
+```bash
+source .venv/bin/activate      # Windows: .venv\Scripts\activate
 uvicorn backend.main:app --reload
 ```
 
-API available at `http://localhost:8000`. Docs at `http://localhost:8000/docs`.
+Backend available at `http://localhost:8000`.
+Interactive API docs at `http://localhost:8000/docs`.
 
-### 4. Start the frontend
+### Terminal 3 — Start the Streamlit frontend
 
 ```bash
+source .venv/bin/activate      # Windows: .venv\Scripts\activate
 streamlit run frontend/app.py
 ```
 
-Opens at `http://localhost:8501`.
+Opens automatically at `http://localhost:8501`.
 
-### 5. Upload a PDF
+Upload any PDF from `sample_docs/` or your own contract to try it out.
 
-Use one of the sample documents in `sample_docs/` or upload your own contract.
+---
+
+## Testing
+
+This project does not include an automated test suite. Verification is done manually using the provided sample documents and the health check endpoint.
+
+### 1. Verify the backend is healthy
+
+```bash
+curl http://localhost:8000/health
+```
+
+Expected response:
+
+```json
+{
+  "status": "ok",
+  "ollama_reachable": true,
+  "model": "gemma3:12b",
+  "chunk_token_limit": 60000
+}
+```
+
+If `ollama_reachable` is `false`, Ollama is not running — start it with `ollama serve`.
+
+### 2. Test with the sample NDA (single chunk)
+
+Upload `sample_docs/sample_nda.pdf` via the UI or via curl:
+
+```bash
+curl -X POST http://localhost:8000/analyze \
+  -F "file=@sample_docs/sample_nda.pdf" | python -m json.tool
+```
+
+Expected: `chunks: 1`, parties include `Acme Technologies Inc.` and `Horizon Legal Partners LLP`.
+
+### 3. Test chunking with the sample employment contract
+
+```bash
+curl -X POST http://localhost:8000/analyze \
+  -F "file=@sample_docs/sample_employment.pdf" | python -m json.tool
+```
+
+Expected: `chunks: 1` (2,851 tokens, well within the 60,000 limit), parties include `NovaTech Systems Inc.` and `Dr. Emily R. Hartwell`.
+
+To force multi-chunk processing and test the merge logic, run with a reduced chunk limit:
+
+```bash
+CHUNK_TOKENS=700 uvicorn backend.main:app
+```
+
+Then re-upload the employment contract — it will split into 5 chunks and merge automatically.
 
 ---
 
