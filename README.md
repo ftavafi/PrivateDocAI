@@ -297,23 +297,25 @@ This handles arbitrarily long documents without truncation.
 
 ---
 
-## Limitations
+## Roadmap
 
-- PDF only (no DOCX, no scanned images — OCR not implemented)
-- English language documents only
-- Multi-chunk merges may produce generic party aliases ("Employee", "Company") alongside real names — a known limitation of chunk-level extraction
-- Performance depends on hardware; expect 30–90 seconds per document on a CPU
+### v1.1 — Improve the current app
 
----
+- [ ] **OCR support** — scanned PDFs currently return no text; add Tesseract OCR to handle image-based documents
+- [ ] **DOCX support** — accept Word documents alongside PDF
+- [ ] **Multi-language** — extend extraction prompts to handle non-English contracts
+- [ ] **Export results** — download analysis as a formatted PDF report or JSON file
+- [ ] **Model selector** — choose between available Ollama models from the UI without restarting the backend
 
-## Portfolio Context
+### v2.0 — Multi-user web application
 
-This is the first project in a series building toward a full-stack AI engineering portfolio. It demonstrates:
+The current version runs on a single machine for a single user. v2.0 turns it into a
+deployable web app anyone can self-host or access online.
 
-- Local LLM integration via the OpenAI-compatible API pattern
-- Structured output extraction with prompt engineering and validation
-- Context window management for long documents
-- Full-stack Python AI application (FastAPI + Streamlit)
-- Privacy-first architecture as a design constraint
+- [ ] **User authentication** — login and signup with JWT-based sessions; each user sees only their own documents
+- [ ] **Document history** — store past analyses in a database (PostgreSQL) so results persist across sessions
+- [ ] **Modern frontend** — replace Streamlit with a Next.js/React UI for proper routing, a login page, and a personal dashboard
+- [ ] **Docker packaging** — ship the entire stack (backend + frontend + database) as a single `docker-compose up` with no manual Python setup required
+- [ ] **Streaming results** — show extracted fields as they are produced instead of waiting for the full response
 
 Built with Python 3.13, FastAPI 0.136, Streamlit 1.57, Ollama, and Gemma 3 12B.
