@@ -1,6 +1,6 @@
 # PrivateDoc AI
 
-**Offline legal document analysis — no API keys, no cloud, no data leaves your machine.**
+**Offline legal document analysis — no API keys, no cloud, no data ever leaves your machine.**
 
 PrivateDoc AI is a full-stack AI application that extracts structured information from legal PDF documents using a locally-running large language model. Upload a contract or agreement and get back parties, key dates, obligations, and flagged risky clauses in seconds — with zero network calls to external services.
 
